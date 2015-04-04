@@ -61,11 +61,11 @@
     <Compile Include="Form2.Designer.cs">
       <DependentUpon>Form2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form3.cs">
+    <Compile Include="FExportTable.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form3.Designer.cs">
-      <DependentUpon>Form3.cs</DependentUpon>
+    <Compile Include="FExportTable.Designer.cs">
+      <DependentUpon>FExportTable.cs</DependentUpon>
     </Compile>
     <Compile Include="FProgress.cs">
       <SubType>Form</SubType>
@@ -87,8 +87,8 @@
     <EmbeddedResource Include="Form2.resx">
       <DependentUpon>Form2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form3.resx">
-      <DependentUpon>Form3.cs</DependentUpon>
+    <EmbeddedResource Include="FExportTable.resx">
+      <DependentUpon>FExportTable.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FProgress.resx">
       <DependentUpon>FProgress.cs</DependentUpon>

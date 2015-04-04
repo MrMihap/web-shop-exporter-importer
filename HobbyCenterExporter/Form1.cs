@@ -46,7 +46,7 @@ namespace HobbyCenterExporter
     private void LoadTList_Click(object sender, EventArgs e)
     {
      
-      Form3 form = new Form3();
+      FExportTable form = new FExportTable();
       form.ShowDialog();
     }
 

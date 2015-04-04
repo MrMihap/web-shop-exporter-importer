@@ -17,7 +17,7 @@ using System.Windows.Forms;
 
 namespace HobbyCenterExporter
 {
-  public partial class Form3 : Form
+  public partial class FExportTable : Form
   {
     private List<CategoryProp> CatList;
     private CategoryProp SelectedCat;
@@ -39,14 +39,14 @@ namespace HobbyCenterExporter
       }
     }
 
-    public Form3()
+    public FExportTable()
     {
       InitializeComponent();
     }
 
 
 
-    public Form3(List<CategoryProp> _CatList, string sourse)
+    public FExportTable(List<CategoryProp> _CatList, string sourse)
     {
       InitializeComponent();
       CatList = _CatList;
@@ -111,46 +111,30 @@ namespace HobbyCenterExporter
         {
           continue;
         }
-        //sku	
-        //sku_category	
-        //price	
-        //currency	
-        //name	
-        //vendor	
-        //model	
-        //country	
-        //description	
-        //meta_title	
+        //Code
+        //lang (ru)
+        //Category	
+        //Price	
+        //Weight	
+        //Name	
+        //description_full
         //meta_keywords	
         //meta_description	
-        //count	
-        //on_request	
-        //request_time	
-        //new	
-        //popular	
-        //special	
-        //active
+        //meta_title	(Page Title)
+        //Short Description
 
         dataGrid.Rows.Add(
           prop.article, //sku
-          skucategory, //sku_cat
-          prop.price_retail,
-          "rur",
-          prop.name_rus,
-          prop.brand_name,
-          prop.name_lite,
-          "",
-          prop.descrip_full,
-          "",//meta
-          "",//meta
-          "",//meta
-          1, //Count
-          0, //OnRequest
-          "",// request time
-          1, //new
-          0, //popular
-          0,//special
-          1// active
+          "ru", //lang
+          "", //cat
+          Double.Parse(prop.price_retail) * 0.95, //price
+          prop.qty_weight, //weight
+          prop.name_lite, //name
+          prop.descrip_full, //desc full
+          prop.meta_keywords,//meta key
+          prop.meta_description,//meta desc
+          prop.name_rus,//meta
+          prop.descrip_lite//meta
           );
       }
       //выгрузка в таблицу
