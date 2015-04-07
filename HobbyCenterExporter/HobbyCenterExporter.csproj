@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CCatTree.cs" />
     <Compile Include="CDatafileInterface.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Form1.cs">
