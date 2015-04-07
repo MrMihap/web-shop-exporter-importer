@@ -14,12 +14,12 @@ using System.IO;
 using System.Threading;
 namespace HobbyCenterExporter
 {
-  public partial class Form1 : Form
+  public partial class FStartForm : Form
   {
     string Login = "IJVXHNIRBO";
     string Pswd = "kPr4HZXfYV";
     public List<CategoryProp> CatPropList = new List<CategoryProp>();
-    public Form1()
+    public FStartForm()
     {
       InitializeComponent();
     }
@@ -38,7 +38,7 @@ namespace HobbyCenterExporter
 
       txb_text.Text = text;
 
-      Form2 form = new Form2(text);
+      FWebLoader form = new FWebLoader(text);
       form.Show();
       CatPropList = form.propList;
     }

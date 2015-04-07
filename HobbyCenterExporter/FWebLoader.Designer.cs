@@ -1,6 +1,6 @@
 ﻿namespace HobbyCenterExporter
 {
-  partial class Form2
+  partial class FWebLoader
   {
     /// <summary>
     /// Required designer variable.

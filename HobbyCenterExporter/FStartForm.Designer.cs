@@ -1,6 +1,6 @@
 ﻿namespace HobbyCenterExporter
 {
-  partial class Form1
+  partial class FStartForm
   {
     /// <summary>
     /// Требуется переменная конструктора.
