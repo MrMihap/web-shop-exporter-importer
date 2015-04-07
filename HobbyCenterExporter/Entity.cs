@@ -48,6 +48,7 @@ namespace HobbyCenterExporter
     public string article;
     public string name;
     public string qty_free;
+    public volatile bool IsLoaded = false;
   }
   [Serializable]
   public class ProductProp
