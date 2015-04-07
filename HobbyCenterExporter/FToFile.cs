@@ -23,6 +23,7 @@ namespace HobbyCenterExporter
     List<Category> categories = new List<Category>();
     List<Product> prodIdList = new List<Product>();
     ShopLibrary shopLibrary = new ShopLibrary();
+    Queue<Product> LoadingQueue = new Queue<Product>();
     private object shopLibLock = new object();
     public FToFile()
     {
@@ -145,6 +146,7 @@ namespace HobbyCenterExporter
               prod.name = reader.GetAttribute("name");
               prod.article = reader.GetAttribute("article");
               prodIdList.Add(prod);
+              LoadingQueue.Enqueue(prod);
               ItemsCount.Text = prodIdList.Count.ToString();
               break;
           }
@@ -238,7 +240,8 @@ namespace HobbyCenterExporter
 
       //}
       #endregion
-      Task[] taskArray = new Task[30];
+      
+      Task[] taskArray = new Task[20];
       for (int i = 0; i < taskArray.Count(); i++)
       {
         taskArray[i] = new Task(ParticalLoaderFunction);
@@ -285,9 +288,10 @@ namespace HobbyCenterExporter
       WebClient client = new WebClient();
       client.Encoding = Encoding.UTF8;
       lock (shopLibLock)
-        currentID = prodIdList.Where(x => x.IsLoaded == false).First();
+        currentID = LoadingQueue.Dequeue();
       if (currentID == null) return;
       currentID.IsLoaded = true;
+      List<ProductProp> localItems = new List<ProductProp>();
       do
       {
         Product prod = currentID;
@@ -359,14 +363,13 @@ namespace HobbyCenterExporter
           MessageBox.Show("Ошибка декодинга, выгрузка будет продолжена, \nкод ошибки сообщить разработчику\n" + ex.Message);
           continue;
         }
-        string countstring;
+        localItems.Add(product);
+        if(localItems.Count > 10)
         lock (shopLibLock)
         {
-          shopLibrary.ProductProps.Add(product);
-          countstring = shopLibrary.ProductProps.Count.ToString() + " / " + prodIdList.Count().ToString();
+          shopLibrary.ProductProps.AddRange(localItems);
+          localItems.Clear();
         }
-        ItemsCount.BeginInvoke(new Action<TextBox>(x => x.Text = countstring));
-
         //login – логин указанный в настройках API
         //code – сумма запрашиваемой информации, подробнее:
         //article — артикул опрашиваемого товара (получение списков смотрите выше)
@@ -375,8 +378,14 @@ namespace HobbyCenterExporter
         //пример: $key = md5($login.$passAPI.$article.$code), где:
 
         lock (shopLibLock)
-          currentID = prodIdList.Where(x => x.IsLoaded == false).First();
+          currentID = LoadingQueue.Dequeue();
       } while (currentID != null);
+      if (localItems.Count > 0)
+        lock (shopLibLock)
+        {
+          shopLibrary.ProductProps.AddRange(localItems);
+          localItems.Clear();
+        }
     }
     #region Helpers
     private Post PostParser(string text)
