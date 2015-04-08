@@ -10,6 +10,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using System.Xml;
+using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -247,10 +248,12 @@ namespace HobbyCenterExporter
         taskArray[i] = new Task(ParticalLoaderFunction);
         taskArray[i].Start();
       }
+      Thread.Sleep(500);
       while (taskArray.Where(task => task.Status == TaskStatus.Running).Count() > 0)
       {
         ItemsCount.Text = shopLibrary.ProductProps.Count.ToString() + " / " + prodIdList.Count().ToString();
         ItemsCount.Refresh();
+        Thread.Sleep(1000);
       }
       for (int i = 0; i < taskArray.Count(); i++)
       {
@@ -364,7 +367,7 @@ namespace HobbyCenterExporter
           continue;
         }
         localItems.Add(product);
-        if(localItems.Count > 10)
+        if(localItems.Count > 2)
         lock (shopLibLock)
         {
           shopLibrary.ProductProps.AddRange(localItems);
@@ -378,7 +381,10 @@ namespace HobbyCenterExporter
         //пример: $key = md5($login.$passAPI.$article.$code), где:
 
         lock (shopLibLock)
-          currentID = LoadingQueue.Dequeue();
+          if (LoadingQueue.Count > 0)
+            currentID = LoadingQueue.Dequeue();
+          else
+            break;
       } while (currentID != null);
       if (localItems.Count > 0)
         lock (shopLibLock)
