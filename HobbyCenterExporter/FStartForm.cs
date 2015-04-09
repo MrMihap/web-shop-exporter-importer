@@ -169,7 +169,21 @@ namespace HobbyCenterExporter
       string result = "";
       for (int i = 0; i < array.Length; i++)
       {
-        string cell = array[i].Replace("\"", "\"\"").Replace("&nbsp;", " ").Replace("&quot;", "\"\"").Replace("&amp;", "&");
+        if (array[i].Contains("35910"))
+        {
+        }
+        string cell = array[i].Replace("\"", "\"\"");
+        cell = cell.Replace("&nbsp;", " ");
+        cell = cell.Replace("quot;", "\"");
+        cell = cell.Replace("amp;", " ");
+        cell = cell.Replace("&ldquo;", "\"");
+        cell = cell.Replace("&rdquo;", "\"");
+        cell = cell.Replace("& nbsp;", " ");
+        cell = cell.Replace("& ldquo;", "\"");
+        cell = cell.Replace("& rdquo;", "\"");
+        cell = cell.Replace(";", ":");
+        cell = cell.Replace("&","");
+        //        cell = cell.Replace(";", "\";\"");
         if (i < array.Length - 1)
           cell += ";";
         result += cell;
