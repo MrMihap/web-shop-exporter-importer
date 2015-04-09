@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CCatTree.cs" />
+    <Compile Include="CCSVBuilder.cs" />
     <Compile Include="CDatafileInterface.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="FStartForm.cs">

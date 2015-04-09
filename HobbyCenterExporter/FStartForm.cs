@@ -34,18 +34,15 @@ namespace HobbyCenterExporter
 
       WebClient client = new WebClient();
       client.Encoding = Encoding.UTF8;
-      string text = client.DownloadString(website + request);
-
-      txb_text.Text = text;
-
-      FWebLoader form = new FWebLoader(text);
+      string response = client.DownloadString(website + request);
+      FWebLoader form = new FWebLoader(response);
       form.Show();
       CatPropList = form.propList;
     }
-  
+
     private void LoadTList_Click(object sender, EventArgs e)
     {
-     
+
       FExportTable form = new FExportTable();
       form.ShowDialog();
     }
@@ -66,7 +63,120 @@ namespace HobbyCenterExporter
       form.ShowDialog();
     }
 
+    private void CSVExportButton_Click(object sender, EventArgs e)
+    {
+      string filePath = "";
+      MessageBox.Show("Укажите файл с данными о товарах и категориях в формате .bin");
+      OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
+
+      dialog.Filter = "bin files (*.bin)|*.bin|All files|*.*";
+      switch (dialog.ShowDialog())
+      {
+        case DialogResult.OK:
+          filePath = dialog.FileName;
+          break;
+      }
+      
+      ShopLibrary shopLibrary = CDatafileInterface.ReadFromFile(filePath);
+      MessageBox.Show(
+        "Из файла успешно загружено " 
+        + shopLibrary.ProductProps.Count 
+        + " товаров и " 
+        + shopLibrary.Categories.Count 
+        +" категорий" );
+      MessageBox.Show("Укажите имя CSV файла для выгрузки в него товаров и категорий");
+      SaveFileDialog Savedialog = new SaveFileDialog();
+      Savedialog.AddExtension = true;
+      Savedialog.DefaultExt = "csv";
+      Savedialog.Filter = "csv files (*.csv)|*.csv";
+      switch (Savedialog.ShowDialog())
+      {
+        case DialogResult.OK:
+          filePath = Savedialog.FileName;
+          break;
+      }
+      using (StreamWriter swr = new StreamWriter(filePath))
+      {
+        #region Атрибуты экспорта
+        string[] attrArray = new string[]{ 
+       "Product code",	
+       "Language",	
+       "Category",	
+       "Price",	
+       "Weight",	
+       "Product name",	
+       "Description",	
+       "Meta keywords",	
+       "Meta description",	
+       "Search words",	
+       "Features",	
+       "SEO name",	
+       "Short description",	
+       "Detailed image",	
+       "Page title",	
+       "Image URL"
+      };
+        #endregion
+        int lineCount = 0;
+        CCatTree categories = new CCatTree(shopLibrary.Categories);
+
+        swr.WriteLine(CSVLineBuilder(attrArray));
+        foreach (ProductProp prop in shopLibrary.ProductProps)
+        {
+
+          string[] Values = new string[attrArray.Count()];
+          //Product code	
+          Values[0] = prop.article.ToString();
+          //Language	
+          Values[1] = "ru";
+          //Category	
+          Values[2] = categories.getPath(prop.category_list);
+          //Price	
+          Values[3] = ((int)(Double.Parse(prop.price_retail) * 0.95)).ToString();
+          //Weight	
+          Values[4] = prop.qty_weight;
+          //Product name	
+          Values[5] = prop.name_rus;
+          //Description	
+          Values[6] = prop.descrip_full.Replace("&lt;", "<").Replace("&gt;", ">"); //desc full
+          //Meta keywords	
+          Values[7] = prop.meta_keywords.Replace("&lt;", "<").Replace("&gt;", ">");//meta key
+          //Meta description	
+          Values[8] = prop.meta_description;
+          //Search words
+          Values[9] = prop.meta_description + " " + prop.name_lite + " " + prop.name_lite + " " + prop.meta_keywords;
+          //Features	
+          Values[10] = "";
+          //SEO name	
+          Values[11] = prop.name_rus;
+          //Short description
+          Values[12] = prop.descrip_lite.Replace("&lt;", "<").Replace("&gt;", ">");
+          //Detailed image
+          Values[13] = "";
+          //Page title	
+          Values[14] = prop.name_rus;
+          //Image URL
+          Values[15] = prop.images_title;
+          swr.WriteLine(CSVLineBuilder(Values));
+          lineCount++;
+        }
+        MessageBox.Show("Удачно выгружено " + lineCount.ToString() +" наименований");
+      }
+
+    }
+    string CSVLineBuilder(string[] array)
+    {
+      string result = "";
+      for (int i = 0; i < array.Length; i++)
+      {
+        string cell = array[i].Replace("\"", "\"\"").Replace("&nbsp;", " ").Replace("&quot;", "\"\"").Replace("&amp;", "&");
+        if (i < array.Length - 1)
+          cell += ";";
+        result += cell;
+      }
+      return result;
+    }
   }
-  
+
 
 }
