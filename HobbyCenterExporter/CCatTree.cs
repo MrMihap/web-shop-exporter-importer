@@ -21,9 +21,16 @@ namespace HobbyCenterExporter
     public string getPath(int id)
     {
       //берем нижнюю категрию
+      List<int> Keys = new List<int>();
+      foreach (CategoryProp key in categories)
+      {
+        Keys.Add(key.id);
+      }
       CategoryProp currentCat = categories.Where(x => x.id == id).FirstOrDefault();
       List<CategoryProp> catPath = new List<CategoryProp>();
-      if (currentCat == null) return "unbeeing path";
+      if (currentCat == null)
+        throw new KeyNotFoundException("не существующая категория");
+//        return "unbeeing path";
       catPath.Add(currentCat);
       while (currentCat.parent_id > 0)
       {

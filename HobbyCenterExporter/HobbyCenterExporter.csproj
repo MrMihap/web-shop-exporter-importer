@@ -69,12 +69,6 @@
     <Compile Include="FExportTable.Designer.cs">
       <DependentUpon>FExportTable.cs</DependentUpon>
     </Compile>
-    <Compile Include="FProgress.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FProgress.Designer.cs">
-      <DependentUpon>FProgress.cs</DependentUpon>
-    </Compile>
     <Compile Include="FToFile.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,9 +85,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FExportTable.resx">
       <DependentUpon>FExportTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FProgress.resx">
-      <DependentUpon>FProgress.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FToFile.resx">
       <DependentUpon>FToFile.cs</DependentUpon>

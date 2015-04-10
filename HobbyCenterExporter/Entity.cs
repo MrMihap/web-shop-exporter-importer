@@ -63,11 +63,24 @@ namespace HobbyCenterExporter
         this.article = data["article"];
         this.brand_id = int.Parse(data["brand_id"]);
         this.brand_name = data["brand_name"];
-        string[] categories = data["category_list"].Split(',');
-        string category = categories.Last().Replace(" ", "");
-        if (categories.Count() > 1)
+        string[] categoriesArray = data["category_list"].Split(',');
+        string category = categoriesArray.First().Replace(" ", "");
+        this.categories = new List<int>();
+
+        if (categoriesArray.Count() >= 1)
         {
+          int value;
+          foreach (string category_id in categoriesArray)
+          {
+            value = 0;
+            int.TryParse(category_id, out value);
+            this.categories.Add(value);
+          }
           //do noth
+        }
+        else
+        {
+          this.categories.Add(0);
         }
         if (category.Equals(""))
           this.category_list = 0;
@@ -77,11 +90,10 @@ namespace HobbyCenterExporter
         }
         this.descrip_full = data["descrip_full"];
         this.descrip_lite = data["descrip_lite"];
-        this.images_title = data["images_title"];
+        this.images_title = "www.hobbycenter.ru/imglib" + data["images_title"];
         this.link_eng_pdf = data["link_eng_pdf"];
         this.link_exploded = data["link_exploded"];
-        this.link_ext = data["link_ext"];
-        this.link_pdf = data["link_pdf"];
+        this.link_ext = data["link_ext"];        this.link_pdf = data["link_pdf"];
         this.link_pdf2 = data["link_pdf2"];
         this.link_video = data["link_video"];
         this.meta_description = data["meta_description"];
@@ -128,6 +140,7 @@ namespace HobbyCenterExporter
     public string brand_name;// — имя бренда
 
     public int category_list;// — идентификатор  (получение списков смотрите выше)
+    public List<int> categories;
     public string qty_free;// — свободный остаток на складе
     public string qty_status;// — статус остатка (для пользователей)
     public string qty_in_box;// — колиство единиц товара в коробке

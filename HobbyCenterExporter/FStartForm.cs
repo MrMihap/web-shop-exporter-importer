@@ -130,7 +130,14 @@ namespace HobbyCenterExporter
           //Language	
           Values[1] = "ru";
           //Category	
-          Values[2] = categories.getPath(prop.category_list);
+          try
+          {
+            Values[2] = categories.getPath(prop.category_list);
+          }
+          catch (KeyNotFoundException ex)
+          {
+            continue;
+          }
           //Price	
           Values[3] = ((int)(Double.Parse(prop.price_retail) * 0.95)).ToString();
           //Weight	
@@ -189,6 +196,11 @@ namespace HobbyCenterExporter
         result += cell;
       }
       return result;
+    }
+
+    private void imgLoadButton_Click(object sender, EventArgs e)
+    {
+
     }
   }
 

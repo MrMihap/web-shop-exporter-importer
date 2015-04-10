@@ -242,7 +242,7 @@ namespace HobbyCenterExporter
       //}
       #endregion
       
-      Task[] taskArray = new Task[20];
+      Task[] taskArray = new Task[15];
       for (int i = 0; i < taskArray.Count(); i++)
       {
         taskArray[i] = new Task(ParticalLoaderFunction);
@@ -287,7 +287,6 @@ namespace HobbyCenterExporter
       string website = "http://hobbycenter.ru/API/";
 
       string response;
-      //получаем список всех id актуальных товаров
       WebClient client = new WebClient();
       client.Encoding = Encoding.UTF8;
       lock (shopLibLock)
