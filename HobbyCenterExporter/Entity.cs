@@ -90,10 +90,11 @@ namespace HobbyCenterExporter
         }
         this.descrip_full = data["descrip_full"];
         this.descrip_lite = data["descrip_lite"];
-        this.images_title = "www.hobbycenter.ru/imglib" + data["images_title"];
+        this.images_title = data["images_title"];
         this.link_eng_pdf = data["link_eng_pdf"];
         this.link_exploded = data["link_exploded"];
-        this.link_ext = data["link_ext"];        this.link_pdf = data["link_pdf"];
+        this.link_ext = data["link_ext"];
+        this.link_pdf = data["link_pdf"];
         this.link_pdf2 = data["link_pdf2"];
         this.link_video = data["link_video"];
         this.meta_description = data["meta_description"];

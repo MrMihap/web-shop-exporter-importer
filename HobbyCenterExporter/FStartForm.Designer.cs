@@ -85,6 +85,7 @@
       this.Controls.Add(this.LoadTList);
       this.Name = "FStartForm";
       this.Text = "Form1";
+      this.Load += new System.EventHandler(this.FStartForm_Load);
       this.ResumeLayout(false);
 
     }

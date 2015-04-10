@@ -19,6 +19,7 @@ namespace HobbyCenterExporter
     string Login = "IJVXHNIRBO";
     string Pswd = "kPr4HZXfYV";
     public List<CategoryProp> CatPropList = new List<CategoryProp>();
+    ShopLibrary loadedLib;
     public FStartForm()
     {
       InitializeComponent();
@@ -61,6 +62,7 @@ namespace HobbyCenterExporter
     {
       FToFile form = new FToFile();
       form.ShowDialog();
+      loadedLib = form.shopLibrary;
     }
 
     private void CSVExportButton_Click(object sender, EventArgs e)
@@ -123,7 +125,6 @@ namespace HobbyCenterExporter
         swr.WriteLine(CSVLineBuilder(attrArray));
         foreach (ProductProp prop in shopLibrary.ProductProps)
         {
-
           string[] Values = new string[attrArray.Count()];
           //Product code	
           Values[0] = prop.article.ToString();
@@ -171,6 +172,7 @@ namespace HobbyCenterExporter
       }
 
     }
+
     string CSVLineBuilder(string[] array)
     {
       string result = "";
@@ -199,6 +201,12 @@ namespace HobbyCenterExporter
     }
 
     private void imgLoadButton_Click(object sender, EventArgs e)
+    {
+      CImageLoader loader = new CImageLoader(loadedLib);
+      loader.LoadImages();
+    }
+
+    private void FStartForm_Load(object sender, EventArgs e)
     {
 
     }

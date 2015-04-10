@@ -23,7 +23,7 @@ namespace HobbyCenterExporter
     List<CategoryProp> CatPropList = new List<CategoryProp>();
     List<Category> categories = new List<Category>();
     List<Product> prodIdList = new List<Product>();
-    ShopLibrary shopLibrary = new ShopLibrary();
+    public ShopLibrary shopLibrary = new ShopLibrary();
     Queue<Product> LoadingQueue = new Queue<Product>();
     private object shopLibLock = new object();
     public FToFile()

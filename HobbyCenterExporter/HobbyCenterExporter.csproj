@@ -50,6 +50,7 @@
     <Compile Include="CCatTree.cs" />
     <Compile Include="CCSVBuilder.cs" />
     <Compile Include="CDatafileInterface.cs" />
+    <Compile Include="CImageLoader.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="FStartForm.cs">
       <SubType>Form</SubType>
