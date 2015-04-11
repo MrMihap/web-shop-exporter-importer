@@ -59,6 +59,8 @@ namespace HobbyCenterExporter
       {
         LoadThreads[i].Wait();
       }
+      MessageBox.Show("Фото выгружены в указанную диркторию");
+      this.BuildImgCSV();
 
     }
     private void LoadImagesFunction()
@@ -82,6 +84,72 @@ namespace HobbyCenterExporter
       }
 
     }
+    private void BuildImgCSV()
+    {
+      if (library == null) return;
+      string filePath ="";
+      SaveFileDialog dialog = new SaveFileDialog();
+      dialog.AddExtension = true;
+      dialog.DefaultExt = "csv";
+      dialog.Filter = "csv files (*.csv)|*.csv";
+      switch (dialog.ShowDialog())
+      {
+        case DialogResult.OK:
+          filePath = dialog.FileName;
+          break;
+      }
+      if (filePath.Length < 8) return;
+      #region Атрибуты экспорта
+      string[] attrArray = new string[]{ 
+       "Product code",	
+       "Pair type",
+       "Detailed image"
+      };
+      #endregion
+      using (StreamWriter swr = new StreamWriter(filePath))
+      {
+        string line = CSVLineBuilder(attrArray);
+        swr.WriteLine(line);
+        foreach (ProductProp item in library.ProductProps)
+        {
+          string[] Values = new string[attrArray.Count()];
+          Values[0] = item.article.ToString();
+          Values[1] = "M";
+          Values[2] = item.images_title;
+          line = CSVLineBuilder(Values);
+          swr.WriteLine(line);
+        }
+      }
+      MessageBox.Show("Данные для выгрузки фото сохранены в файл успешно");
+    }
+
+    string CSVLineBuilder(string[] array)
+    {
+      string result = "";
+      for (int i = 0; i < array.Length; i++)
+      {
+        if (array[i].Contains("35910"))
+        {
+        }
+        string cell = array[i].Replace("\"", "\"\"");
+        cell = cell.Replace("&nbsp;", " ");
+        cell = cell.Replace("quot;", "\"");
+        cell = cell.Replace("amp;", " ");
+        cell = cell.Replace("&ldquo;", "\"");
+        cell = cell.Replace("&rdquo;", "\"");
+        cell = cell.Replace("& nbsp;", " ");
+        cell = cell.Replace("& ldquo;", "\"");
+        cell = cell.Replace("& rdquo;", "\"");
+        cell = cell.Replace(";", ":");
+        cell = cell.Replace("&", "");
+        //        cell = cell.Replace(";", "\";\"");
+        if (i < array.Length - 1)
+          cell += ";";
+        result += cell;
+      }
+      return result;
+    }
+
     private void InitialiseLib()
     {
       OpenFileDialog dialog = new OpenFileDialog();

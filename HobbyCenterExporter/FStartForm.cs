@@ -116,7 +116,7 @@ namespace HobbyCenterExporter
        "Short description",	
        "Detailed image",	
        "Page title",	
-       "Image URL"
+       "Detailed image"
       };
         #endregion
         int lineCount = 0;
