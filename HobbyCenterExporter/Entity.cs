@@ -137,6 +137,7 @@ namespace HobbyCenterExporter
     public string link_pdf2;// — ссылка на pdf инструкцию по запуску
     public string link_exploded;// — ссылка на развернутое описание для модели
     public string images_title;// — имя файла (из директории /imglib/) картинки титула
+    public List<string> images = new List<string>(); //имена дополнительных картинок товара
     public int brand_id;// — идентификатор бренда (получение списков смотрите выше)
     public string brand_name;// — имя бренда
 

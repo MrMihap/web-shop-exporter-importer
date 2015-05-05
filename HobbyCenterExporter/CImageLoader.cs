@@ -73,6 +73,16 @@ namespace HobbyCenterExporter
           if (UnloadedQueue.Count == 0) return;
           else
             currentTarget = UnloadedQueue.Dequeue();
+        for (int i = 0; i < currentTarget.images.Count; i++)
+        {
+          try 
+          { 
+            Client.DownloadFile(currentTarget.images[i], selectedDir + currentTarget.images_title); 
+          }
+          catch (Exception e) 
+          { 
+          }
+        }
         try
         {
           Client.DownloadFile(SiteUrl + currentTarget.images_title, selectedDir + currentTarget.images_title);
@@ -87,7 +97,7 @@ namespace HobbyCenterExporter
     private void BuildImgCSV()
     {
       if (library == null) return;
-      string filePath ="";
+      string filePath = "";
       SaveFileDialog dialog = new SaveFileDialog();
       dialog.AddExtension = true;
       dialog.DefaultExt = "csv";
@@ -118,6 +128,14 @@ namespace HobbyCenterExporter
           Values[2] = item.images_title;
           line = CSVLineBuilder(Values);
           swr.WriteLine(line);
+          for (int i = 0; i < item.images.Count; i++)
+          {
+            Values[0] = item.article.ToString();
+            Values[1] = "A";
+            Values[2] = item.images[i];
+            line = CSVLineBuilder(Values);
+            swr.WriteLine(line);
+          }
         }
       }
       MessageBox.Show("Данные для выгрузки фото сохранены в файл успешно");

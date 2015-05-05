@@ -20,6 +20,7 @@ namespace HobbyCenterExporter
   {
     string Login = "IJVXHNIRBO";
     string Pswd = "kPr4HZXfYV";
+    int LOADING_THREADS_COUNT = 1;
     List<CategoryProp> CatPropList = new List<CategoryProp>();
     List<Category> categories = new List<Category>();
     List<Product> prodIdList = new List<Product>();
@@ -153,96 +154,7 @@ namespace HobbyCenterExporter
           }
         }
       }
-      #region Старый однопоточный способ
-      //// теперь загрузим подробности товаров
-      //for (int i = 0; i < prodIdList.Count; i++)
-      //{
-      //  Product prod = prodIdList[i];
-      //  client = new WebClient();
-      //  client.Encoding = Encoding.UTF8;
-      //  //http://www.hobbycenter.ru/API/i.php?login=IJVXHNIRBO&type=xml&code=products_full&key=5e6bd6affc75b4dfc4fea4683daab461&article=TRA24054&attribute=description|extended_description
-      //  #region new api using
-      //  //// $key =  md5('Логин для API' . 'Пароль для API' . 'yml' . 'products_full');
-      //  //client.Encoding = Encoding.UTF8;
-      //  //md5sourse = Login + Pswd + ResultType.xml + ListCode.products_full;
-      //  //md5 = GetMd5Sum(md5sourse);
-      //  //request = "i.php?login=" + Login + "&type=" + ResultType.xml + "&code=" + ListCode.products_full + "&key=" + md5 + "&article=" + prod.article + "&attribute=description|extended_description";
-      //  //text = client.DownloadString(website + request);
-      //  //ProductItem prodProp = new ProductItem();
-      //  //#region xml parsing
-      //  //using (XmlReader reader = XmlReader.Create(new StringReader(text)))
-      //  //{
-      //  //  while (reader.Read())
-      //  //  {
-      //  //    switch (reader.NodeType)
-      //  //    {
-      //  //      case XmlNodeType.Element:
-      //  //        if (!reader.Name.Equals("item")) continue;
-      //  //        #region fill the properties
-      //  //        prodProp.article = reader.GetAttribute("article");
-      //  //        prodProp.brand = reader.GetAttribute("brand");
-      //  //        string s = reader.GetAttribute("category_list");
-      //  //        // prodProp.category_list = int.Parse(reader.GetAttribute(s));
-      //  //        prodProp.dealer_price = int.Parse(reader.GetAttribute("dealer_price"));
-      //  //        prodProp.description = reader.GetAttribute("description");
-      //  //        prodProp.id = int.Parse(reader.GetAttribute("id"));
-      //  //        prodProp.main_category = int.Parse(reader.GetAttribute("main_category"));
-      //  //        prodProp.name = reader.GetAttribute("name");
-      //  //        prodProp.qty_free = reader.GetAttribute("qty_free");
-      //  //        prodProp.retail_price = int.Parse(reader.GetAttribute("retail_price"));
-      //  //        prodProp.sale = reader.GetAttribute("sale");
-      //  //        prodProp.volume = reader.GetAttribute("volume");
-      //  //        prodProp.weight = reader.GetAttribute("weight");
-      //  //        #endregion
-      //  //        break;
-      //  //    }
-      //  //  }
-      //  //}
-      //  //#endregion
-      //  #endregion
-      //  //1 — название КТ (полное и сокр.)
-      //  //2 — описание КТ (полное и сокр., мета-данные)
-      //  //4 — ссылки к описанию (видео, pdf инструкции)
-      //  //8 — галерея картинок (картинка шапка и галерея)
-      //  //16 — бренд (id и имя)
-      //  //32 — категории (id'шники и имена)
-      //  //64 — количество (кол. на складе, кол. в коробке, вес)
-      //  //128 — цены для каждого из видов дилерства
-
-      //  int ktSumm = 1 + 2 + 4 + 8 + 16 + 32 + 64 + 128;
-      //  md5sourse = Login + Pswd + prod.article + ktSumm.ToString();
-      //  md5 = GetMd5Sum(md5sourse);
-      //  request = "product.php?login=" + Login + "&article=" + prod.article + "&code=" + ktSumm.ToString() + "&key=" + md5;
-      //  //http://hobbycenter.ru/API/product.php?login=IJVXHNIRBO&article=TRA76054&code=43&key=0e5e915d062d88976a4b9fc88a18f4cc где:
-      //  text = client.DownloadString(website + request);
-      //  Post postData = PostParser(text);
-      //  ProductProp product = new ProductProp();
-      //  try
-      //  {
-      //    product = new ProductProp(postData);
-      //  }
-      //  catch(Exception ex)
-      //  {
-      //    MessageBox.Show("Ошибка декодинга, выгрузка будет продолжена, \nкод ошибки сообщить разработчику\n" + ex.Message);
-      //    continue;
-      //  }
-      //  shopLibrary.ProductProps.Add(product);
-      //  ItemsCount.Text = shopLibrary.ProductProps.Count.ToString() + " / " + prodIdList.Count().ToString();
-      //  ItemsCount.Refresh();
-
-      //  //login – логин указанный в настройках API
-      //  //code – сумма запрашиваемой информации, подробнее:
-      //  //article — артикул опрашиваемого товара (получение списков смотрите выше)
-      //  //key — ключ сверки доступа к API, подробнее:
-
-      //  //пример: $key = md5($login.$passAPI.$article.$code), где:
-      //  //       
-      //  //shopLibrary.ProductProps.Add();
-
-      //}
-      #endregion
-      
-      Task[] taskArray = new Task[15];
+      Task[] taskArray = new Task[LOADING_THREADS_COUNT];
       for (int i = 0; i < taskArray.Count(); i++)
       {
         taskArray[i] = new Task(ParticalLoaderFunction);
@@ -365,6 +277,38 @@ namespace HobbyCenterExporter
           MessageBox.Show("Ошибка декодинга, выгрузка будет продолжена, \nкод ошибки сообщить разработчику\n" + ex.Message);
           continue;
         }
+        if (AllowLoadAdditionalImages.Checked)
+        { 
+          /*$key =  md5('Логин для API' . 'Пароль для API' . 'xml' . 'products_full');
+    http://www.hobbycenter.ru/API/i.php?login=Логин для API&type=xml&code=products_full
+    &key=$key&article=TRA24054&attribute=description|photo\
+        
+           */
+          md5sourse = Login + Pswd + "xml" + "products_full";
+          md5 = GetMd5Sum(md5sourse);
+          request = "/i.php?login=" + Login + "&type=xml&code=products_full&key=" + md5 + "&article=" +  
+            prod.article + 
+            //"TRA37076-1" + // debug - single item, which containsrealy a lot of images
+            "&attribute=photo";
+          response = client.DownloadString(website + request);
+
+        
+          string galeryString = "";
+          try 
+          {
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(response);
+            XmlNodeList nodeList = doc.GetElementsByTagName("item");
+
+            galeryString = nodeList[0].Attributes["gallery"].Value;
+            product.images.AddRange(galeryString.Split('|'));
+          }
+          catch (Exception e)
+          {
+
+          }
+          Thread.Sleep(2000);
+        }
         localItems.Add(product);
         if(localItems.Count > 2)
         lock (shopLibLock)
@@ -453,6 +397,26 @@ namespace HobbyCenterExporter
       return sb.ToString();
     }
     #endregion
+
+    private void threadCountUpDown_ValueChanged(object sender, EventArgs e)
+    {
+      LOADING_THREADS_COUNT = (int)threadCountUpDown.Value;
+    }
+
+    private void AllowLoadAdditionalImages_CheckedChanged(object sender, EventArgs e)
+    {
+      if (AllowLoadAdditionalImages.Checked)
+      {
+        threadCountUpDown.Value = 1;
+        threadCountUpDown.Enabled = false;
+      }
+      else
+      {
+        threadCountUpDown.Value = 10;
+        threadCountUpDown.Enabled = true;
+      }
+    }
+
 
 
   }

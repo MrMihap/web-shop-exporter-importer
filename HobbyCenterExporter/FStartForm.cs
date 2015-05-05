@@ -192,6 +192,7 @@ namespace HobbyCenterExporter
         cell = cell.Replace("& rdquo;", "\"");
         cell = cell.Replace(";", ":");
         cell = cell.Replace("&","");
+        cell = cell.Replace("/imglib/", "http://www.hobbycenter.ru/imglib/");
         //        cell = cell.Replace(";", "\";\"");
         if (i < array.Length - 1)
           cell += ";";
