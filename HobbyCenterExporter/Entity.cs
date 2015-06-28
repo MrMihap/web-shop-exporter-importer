@@ -10,11 +10,11 @@ namespace HobbyCenterExporter
   public class ShopLibrary
   {
     public List<CategoryProp> Categories;
-    public List<ProductProp> ProductProps;
+    public List<ProductItem> ProductProps;
     public ShopLibrary()
     {
       Categories = new List<CategoryProp>();
-      ProductProps = new List<ProductProp>();
+      ProductProps = new List<ProductItem>();
     }
   }
   public class Category
@@ -48,6 +48,7 @@ namespace HobbyCenterExporter
     public string article;
     public string name;
     public string qty_free;
+    public volatile bool IsLoaded = false;
   }
   [Serializable]
   public class ProductProp
@@ -62,11 +63,24 @@ namespace HobbyCenterExporter
         this.article = data["article"];
         this.brand_id = int.Parse(data["brand_id"]);
         this.brand_name = data["brand_name"];
-        string[] categories = data["category_list"].Split(',');
-        string category = categories.Last().Replace(" ", "");
-        if (categories.Count() > 1)
+        string[] categoriesArray = data["category_list"].Split(',');
+        string category = categoriesArray.First().Replace(" ", "");
+        this.categories = new List<int>();
+
+        if (categoriesArray.Count() >= 1)
         {
+          int value;
+          foreach (string category_id in categoriesArray)
+          {
+            value = 0;
+            int.TryParse(category_id, out value);
+            this.categories.Add(value);
+          }
           //do noth
+        }
+        else
+        {
+          this.categories.Add(0);
         }
         if (category.Equals(""))
           this.category_list = 0;
@@ -123,10 +137,12 @@ namespace HobbyCenterExporter
     public string link_pdf2;// — ссылка на pdf инструкцию по запуску
     public string link_exploded;// — ссылка на развернутое описание для модели
     public string images_title;// — имя файла (из директории /imglib/) картинки титула
+    public List<string> images = new List<string>(); //имена дополнительных картинок товара
     public int brand_id;// — идентификатор бренда (получение списков смотрите выше)
     public string brand_name;// — имя бренда
 
     public int category_list;// — идентификатор  (получение списков смотрите выше)
+    public List<int> categories;
     public string qty_free;// — свободный остаток на складе
     public string qty_status;// — статус остатка (для пользователей)
     public string qty_in_box;// — колиство единиц товара в коробке
@@ -145,15 +161,26 @@ namespace HobbyCenterExporter
     public string article;
     public string name;
     public string brand;
-    public int category_list;
+    public List<int> category_list = new List<int>();
     public int main_category;
     public int dealer_price;
     public int retail_price;
     public string qty_free;
-    public string sale;
+    public int sale;
     public string weight;
     public string volume;
     public string description;
+    public string extended_description;
+    public ulong last_update;
+    public List<string> gallery = new List<string>();
+    public string Photo;
+    public string spares;
+    public ProductItem()
+    {
+
+    }
+
+
   }
   public class Post : Dictionary<string, string>
   {
@@ -173,7 +200,8 @@ namespace HobbyCenterExporter
   public enum ResultType
   {
     xml,
-    csv
+    csv,
+    yml
   }
 }
 //prodProp.id = int.Parse(reader.GetAttribute("id"));

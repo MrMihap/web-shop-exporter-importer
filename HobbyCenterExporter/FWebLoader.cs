@@ -13,7 +13,7 @@ using System.Security.Cryptography;
 using System.Net;
 namespace HobbyCenterExporter
 {
-  public partial class Form2 : Form
+  public partial class FWebLoader : Form
   {
 
     List<Category> categories = new List<Category>();
@@ -21,11 +21,11 @@ namespace HobbyCenterExporter
     string Login = "IJVXHNIRBO";
     string Pswd = "kPr4HZXfYV";
     string XMLsource = "";
-    public Form2()
+    public FWebLoader()
     {
       InitializeComponent();
     }
-    public Form2(string xmlsource)
+    public FWebLoader(string xmlsource)
     {
       InitializeComponent();
       XMLsource = xmlsource;
