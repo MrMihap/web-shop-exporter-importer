@@ -73,16 +73,7 @@ namespace HobbyCenterExporter
           if (UnloadedQueue.Count == 0) return;
           else
             currentTarget = UnloadedQueue.Dequeue();
-        for (int i = 0; i < currentTarget.images.Count; i++)
-        {
-          try 
-          { 
-            Client.DownloadFile(currentTarget.images[i], selectedDir + currentTarget.images_title); 
-          }
-          catch (Exception e) 
-          { 
-          }
-        }
+      
         try
         {
           string filename =selectedDir + currentTarget.Photo.Replace("http://hobbycenter.ru/imglib/", "");
@@ -134,22 +125,13 @@ namespace HobbyCenterExporter
           Values[2] = item.Photo.Replace("http://hobbycenter.ru/imglib/", ""); 
           line = CSVLineBuilder(Values);
           swr.WriteLine(line);
-<<<<<<< HEAD
+
           foreach (string gallery in item.gallery)
           {
             Values = new string[attrArray.Count()];
             Values[0] = item.article.ToString();
             Values[1] = "A";
-            Values[2] = gallery.Replace("http://hobbycenter.ru/imglib/", ""); ;
-=======
-          for (int i = 0; i < item.images.Count; i++)
-          {
-            Values[0] = item.article.ToString();
-            Values[1] = "A";
-            Values[2] = item.images[i];
->>>>>>> origin/cs-cart-import
-            line = CSVLineBuilder(Values);
-            swr.WriteLine(line);
+            Values[2] = gallery.Replace("http://hobbycenter.ru/imglib/", "");
           }
         }
       }
