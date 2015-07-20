@@ -59,7 +59,7 @@ namespace HobbyCenterExporter
       }
     }
 
-    private void LoadCatsButton_Click(object sender, EventArgs e)
+    private void NewAPILoadCats()
     {
       string md5sourse = Login + Pswd + ResultType.xml + ListCode.categories;
       string md5 = GetMd5Sum(md5sourse);
@@ -73,6 +73,12 @@ namespace HobbyCenterExporter
       using (XmlReader reader = XmlReader.Create(new StringReader(text)))
       {
         // загрузка идентификаторов категорий
+        // костыль
+        Category cat25 = new Category();
+        cat25.id = 25;
+        cat25.parent_id = 0;
+        cat25.name = "Запчасти";
+        categories.Add(cat25);
         while (reader.Read())
         {
           switch (reader.NodeType)
@@ -86,8 +92,6 @@ namespace HobbyCenterExporter
               int.TryParse(ss, out cat.parent_id);
               cat.name = reader.GetAttribute("name");
               categories.Add(cat);
-              CatsCount.Text = shopLibrary.Categories.Count.ToString() + "/" + categories.Count().ToString();
-              CatsCount.Refresh();
               break;
           }
         }
@@ -95,19 +99,7 @@ namespace HobbyCenterExporter
       // загрузим подробности
       for (int i = 0; i < categories.Count; i++)
       {
-        //client = new WebClient();
-        //client.Encoding = Encoding.UTF8;
-        //md5sourse = Login + Pswd + categories[i].id.ToString();
-        //md5 = GetMd5Sum(md5sourse);
-        //request = "categories.php?login=" + Login + "&id=" + categories[i].id.ToString() + "&key=" + md5;
-        //text = client.DownloadString(website + request);
-        //Post DataProps = PostParser(text);
         CategoryProp props = new CategoryProp();
-        //props.description = DataProps["description"];
-        //props.extended_description = DataProps["extended_description"];
-        //props.id = int.Parse(DataProps["id"]);
-        //props.keywords = DataProps["keywords"];
-        //props.name = DataProps["name"];
         props.id = categories[i].id;
         props.name = categories[i].name;
         props.parent_id = categories[i].parent_id;
@@ -116,8 +108,6 @@ namespace HobbyCenterExporter
         else
           props.parent_name = (from p in categories where p.id == props.parent_id select p).FirstOrDefault().name;
         shopLibrary.Categories.Add(props);
-        CatsCount.Text = shopLibrary.Categories.Count.ToString() + "/" + categories.Count().ToString();
-        CatsCount.Refresh();
       }
     }
 
@@ -157,7 +147,7 @@ namespace HobbyCenterExporter
       //  }
       //}
       #endregion
-
+      NewAPILoadCats();
       NewAPILoadAllItems();
       #region MTASK LOADING
       //Task[] taskArray = new Task[1];
@@ -206,9 +196,8 @@ namespace HobbyCenterExporter
       string response;
       WebClient client = new WebClient();
       client.Encoding = Encoding.UTF8;
-
+      
       response = client.DownloadString(website + request);
-      //string debug = new string(response.Take(55000).ToArray());
       shopLibrary.ProductProps.AddRange(CHttpLoader.FromXML(response));
     }
     
@@ -274,24 +263,6 @@ namespace HobbyCenterExporter
     }
     #endregion
 
-    private void threadCountUpDown_ValueChanged(object sender, EventArgs e)
-    {
-      LOADING_THREADS_COUNT = (int)threadCountUpDown.Value;
-    }
-
-    private void AllowLoadAdditionalImages_CheckedChanged(object sender, EventArgs e)
-    {
-      if (AllowLoadAdditionalImages.Checked)
-      {
-        threadCountUpDown.Value = 1;
-        threadCountUpDown.Enabled = false;
-      }
-      else
-      {
-        threadCountUpDown.Value = 10;
-        threadCountUpDown.Enabled = true;
-      }
-    }
 
 
 

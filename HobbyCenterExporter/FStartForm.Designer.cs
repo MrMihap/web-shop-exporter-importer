@@ -28,21 +28,10 @@
     /// </summary>
     private void InitializeComponent()
     {
-      this.LoadTList = new System.Windows.Forms.Button();
       this.LoadKT = new System.Windows.Forms.Button();
       this.CSVExportButton = new System.Windows.Forms.Button();
       this.imgLoadButton = new System.Windows.Forms.Button();
       this.SuspendLayout();
-      // 
-      // LoadTList
-      // 
-      this.LoadTList.Location = new System.Drawing.Point(12, 41);
-      this.LoadTList.Name = "LoadTList";
-      this.LoadTList.Size = new System.Drawing.Size(203, 23);
-      this.LoadTList.TabIndex = 1;
-      this.LoadTList.Text = "Табличный вывод";
-      this.LoadTList.UseVisualStyleBackColor = true;
-      this.LoadTList.Click += new System.EventHandler(this.LoadTList_Click);
       // 
       // LoadKT
       // 
@@ -56,7 +45,7 @@
       // 
       // CSVExportButton
       // 
-      this.CSVExportButton.Location = new System.Drawing.Point(12, 71);
+      this.CSVExportButton.Location = new System.Drawing.Point(12, 41);
       this.CSVExportButton.Name = "CSVExportButton";
       this.CSVExportButton.Size = new System.Drawing.Size(203, 23);
       this.CSVExportButton.TabIndex = 2;
@@ -66,7 +55,7 @@
       // 
       // imgLoadButton
       // 
-      this.imgLoadButton.Location = new System.Drawing.Point(12, 102);
+      this.imgLoadButton.Location = new System.Drawing.Point(12, 70);
       this.imgLoadButton.Name = "imgLoadButton";
       this.imgLoadButton.Size = new System.Drawing.Size(203, 23);
       this.imgLoadButton.TabIndex = 3;
@@ -78,13 +67,12 @@
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(222, 137);
+      this.ClientSize = new System.Drawing.Size(222, 99);
       this.Controls.Add(this.imgLoadButton);
       this.Controls.Add(this.CSVExportButton);
       this.Controls.Add(this.LoadKT);
-      this.Controls.Add(this.LoadTList);
       this.Name = "FStartForm";
-      this.Text = "Form1";
+      this.Text = "Exporter";
       this.Load += new System.EventHandler(this.FStartForm_Load);
       this.ResumeLayout(false);
 
@@ -92,7 +80,6 @@
 
     #endregion
 
-    private System.Windows.Forms.Button LoadTList;
     private System.Windows.Forms.Button LoadKT;
     private System.Windows.Forms.Button CSVExportButton;
     private System.Windows.Forms.Button imgLoadButton;

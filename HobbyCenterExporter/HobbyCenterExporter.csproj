@@ -66,6 +66,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -88,12 +89,6 @@
     <Compile Include="FStartForm.Designer.cs">
       <DependentUpon>FStartForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="FWebLoader.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FWebLoader.Designer.cs">
-      <DependentUpon>FWebLoader.cs</DependentUpon>
-    </Compile>
     <Compile Include="FExportTable.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,9 +105,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FStartForm.resx">
       <DependentUpon>FStartForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FWebLoader.resx">
-      <DependentUpon>FWebLoader.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FExportTable.resx">
       <DependentUpon>FExportTable.cs</DependentUpon>

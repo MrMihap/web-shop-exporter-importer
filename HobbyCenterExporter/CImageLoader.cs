@@ -29,38 +29,50 @@ namespace HobbyCenterExporter
     {
       if (library == null) this.InitialiseLib();
       if (library == null) return;
-      FolderBrowserDialog dialog = new FolderBrowserDialog();
-      switch (dialog.ShowDialog())
+      switch (MessageBox.Show("Загружать файлы фотографий", "Файлы фото", MessageBoxButtons.YesNo))
       {
-        case DialogResult.OK:
-          if (dialog.SelectedPath.Length < 8)
+        case DialogResult.Yes:
+          FolderBrowserDialog dialog = new FolderBrowserDialog();
+          switch (dialog.ShowDialog())
           {
-            MessageBox.Show("Укажите нормальное имя папки");
-            return;
+            case DialogResult.OK:
+              if (dialog.SelectedPath.Length < 8)
+              {
+                MessageBox.Show("Укажите нормальное имя папки");
+                return;
+              }
+              selectedDir = dialog.SelectedPath + @"\";
+              break;
+            case DialogResult.Cancel:
+              MessageBox.Show("Операция отменена пользователем");
+              return;
           }
-          selectedDir = dialog.SelectedPath + @"\";
+          foreach (ProductItem item in library.ProductProps)
+          {
+            UnloadedQueue.Enqueue(item);
+          }
+          Task[] LoadThreads = new Task[4];
+          for (int i = 0; i < LoadThreads.Count(); i++)
+          {
+            LoadThreads[i] = new Task(LoadImagesFunction);
+            LoadThreads[i].Start();
+          }
+          Thread.Sleep(1000);
+          for (int i = 0; i < LoadThreads.Count(); i++)
+          {
+            LoadThreads[i].Wait();
+          }
+          MessageBox.Show("Фото выгружены в указанную диркторию");
           break;
-        case DialogResult.Cancel:
-          MessageBox.Show("Операция отменена пользователем");
-          return;
+        case DialogResult.No:
+          break;
       }
-      foreach (ProductItem item in library.ProductProps)
+      switch (MessageBox.Show("Создать CSV файл импорта фото?", "Файлы фото", MessageBoxButtons.YesNo))
       {
-        UnloadedQueue.Enqueue(item);
+        case DialogResult.Yes:
+          this.BuildImgCSV();
+          break;
       }
-      Task[] LoadThreads = new Task[1];
-      for (int i = 0; i < LoadThreads.Count(); i++)
-      {
-        LoadThreads[i] = new Task(LoadImagesFunction);
-        LoadThreads[i].Start();
-      }
-      Thread.Sleep(1000);
-      for (int i = 0; i < LoadThreads.Count(); i++)
-      {
-        LoadThreads[i].Wait();
-      }
-      MessageBox.Show("Фото выгружены в указанную диркторию");
-      this.BuildImgCSV();
 
     }
     private void LoadImagesFunction()
@@ -73,10 +85,10 @@ namespace HobbyCenterExporter
           if (UnloadedQueue.Count == 0) return;
           else
             currentTarget = UnloadedQueue.Dequeue();
-      
+
         try
         {
-          string filename =selectedDir + currentTarget.Photo.Replace("http://hobbycenter.ru/imglib/", "");
+          string filename = selectedDir + currentTarget.Photo.Replace("http://hobbycenter.ru/imglib/", "");
           Client.DownloadFile(currentTarget.Photo, filename);
           foreach (string gallery in currentTarget.gallery)
           {
@@ -115,15 +127,15 @@ namespace HobbyCenterExporter
       #endregion
       using (StreamWriter swr = new StreamWriter(filePath))
       {
-        string line = CSVLineBuilder(attrArray);
+        string line = CCSVBuilder.BuildLine(attrArray);
         swr.WriteLine(line);
         foreach (ProductItem item in library.ProductProps)
         {
           string[] Values = new string[attrArray.Count()];
           Values[0] = item.article.ToString();
           Values[1] = "M";
-          Values[2] = item.Photo.Replace("http://hobbycenter.ru/imglib/", ""); 
-          line = CSVLineBuilder(Values);
+          Values[2] = item.Photo.Replace("http://hobbycenter.ru/imglib/", "");
+          line = CCSVBuilder.BuildLine(Values);
           swr.WriteLine(line);
 
           foreach (string gallery in item.gallery)
@@ -132,37 +144,12 @@ namespace HobbyCenterExporter
             Values[0] = item.article.ToString();
             Values[1] = "A";
             Values[2] = gallery.Replace("http://hobbycenter.ru/imglib/", "");
+            line = CCSVBuilder.BuildLine(Values);
+            swr.WriteLine(line);
           }
         }
       }
       MessageBox.Show("Данные для выгрузки фото сохранены в файл успешно");
-    }
-
-    string CSVLineBuilder(string[] array)
-    {
-      string result = "";
-      for (int i = 0; i < array.Length; i++)
-      {
-        if (array[i].Contains("35910"))
-        {
-        }
-        string cell = array[i].Replace("\"", "\"\"");
-        cell = cell.Replace("&nbsp;", " ");
-        cell = cell.Replace("quot;", "\"");
-        cell = cell.Replace("amp;", " ");
-        cell = cell.Replace("&ldquo;", "\"");
-        cell = cell.Replace("&rdquo;", "\"");
-        cell = cell.Replace("& nbsp;", " ");
-        cell = cell.Replace("& ldquo;", "\"");
-        cell = cell.Replace("& rdquo;", "\"");
-        cell = cell.Replace(";", ":");
-        cell = cell.Replace("&", "");
-        //        cell = cell.Replace(";", "\";\"");
-        if (i < array.Length - 1)
-          cell += ";";
-        result += cell;
-      }
-      return result;
     }
 
     private void InitialiseLib()

@@ -21,7 +21,6 @@ namespace HobbyCenterExporter.core
       XmlDocument doc = new XmlDocument();
       doc.LoadXml(xmlSourse);
 
-      //productProp.article = doc.GetElementsByTagName("")[0].Value;
       foreach (XmlElement item in doc.GetElementsByTagName("item"))
       {
         ProductItem productItem = new ProductItem();

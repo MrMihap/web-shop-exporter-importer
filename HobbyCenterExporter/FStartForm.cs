@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Web;
 using System.Security.Cryptography;
 using System.Net;
+using System.Web;
 using System.IO;
 using System.Threading;
 namespace HobbyCenterExporter
@@ -36,14 +37,13 @@ namespace HobbyCenterExporter
       WebClient client = new WebClient();
       client.Encoding = Encoding.UTF8;
       string response = client.DownloadString(website + request);
-      FWebLoader form = new FWebLoader(response);
-      form.Show();
-      CatPropList = form.propList;
+      //FWebLoader form = new FWebLoader(response);
+      //form.Show();
+      //CatPropList = form.propList;
     }
 
     private void LoadTList_Click(object sender, EventArgs e)
     {
-
       FExportTable form = new FExportTable();
       form.ShowDialog();
     }
@@ -123,7 +123,7 @@ namespace HobbyCenterExporter
         int lineCount = 0;
         CCatTree categories = new CCatTree(shopLibrary.Categories);
 
-        swr.WriteLine(CSVLineBuilder(attrArray));
+        swr.WriteLine(CCSVBuilder.BuildLine(attrArray));
         foreach (ProductItem prop in shopLibrary.ProductProps)
         {
           string[] Values = new string[attrArray.Count()];
@@ -168,7 +168,7 @@ namespace HobbyCenterExporter
           Values[15] = prop.Photo;
           //Quantity
           Values[16] = "100";
-          swr.WriteLine(CSVLineBuilder(Values));
+          swr.WriteLine(CCSVBuilder.BuildLine(Values));
           lineCount++;
         }
         MessageBox.Show("Удачно выгружено " + lineCount.ToString() +" наименований");
@@ -176,33 +176,7 @@ namespace HobbyCenterExporter
 
     }
 
-    string CSVLineBuilder(string[] array)
-    {
-      string result = "";
-      for (int i = 0; i < array.Length; i++)
-      {
-        if (array[i].Contains("35910"))
-        {
-        }
-        string cell = array[i].Replace("\"", "\"\"");
-        cell = cell.Replace("&nbsp;", " ");
-        cell = cell.Replace("quot;", "\"");
-        cell = cell.Replace("amp;", " ");
-        cell = cell.Replace("&ldquo;", "\"");
-        cell = cell.Replace("&rdquo;", "\"");
-        cell = cell.Replace("& nbsp;", " ");
-        cell = cell.Replace("& ldquo;", "\"");
-        cell = cell.Replace("& rdquo;", "\"");
-        cell = cell.Replace(";", ":");
-        cell = cell.Replace("&","");
-        cell = cell.Replace("/imglib/", "http://www.hobbycenter.ru/imglib/");
-        //        cell = cell.Replace(";", "\";\"");
-        if (i < array.Length - 1)
-          cell += ";";
-        result += cell;
-      }
-      return result;
-    }
+   
 
     private void imgLoadButton_Click(object sender, EventArgs e)
     {
