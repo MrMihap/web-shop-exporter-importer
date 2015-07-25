@@ -47,7 +47,7 @@ namespace HobbyCenterExporter
               MessageBox.Show("Операция отменена пользователем");
               return;
           }
-          foreach (ProductItem item in library.ProductProps)
+          foreach (ProductItem item in library.ProductProps.Where(x => x.sale==1))
           {
             UnloadedQueue.Enqueue(item);
           }
@@ -135,16 +135,16 @@ namespace HobbyCenterExporter
           Values[0] = item.article.ToString();
           Values[1] = "M";
           Values[2] = item.Photo.Replace("http://hobbycenter.ru/imglib/", "");
-          line = CCSVBuilder.BuildLine(Values);
-          swr.WriteLine(line);
+          //line = CCSVBuilder.BuildLine(Values);
+          //swr.WriteLine(line);
 
           foreach (string gallery in item.gallery)
           {
             Values = new string[attrArray.Count()];
             Values[0] = item.article.ToString();
             Values[1] = "A";
-            Values[2] = gallery.Replace("http://hobbycenter.ru/imglib/", "");
-            line = CCSVBuilder.BuildLine(Values);
+            Values[2] = gallery;//.Replace("http://hobbycenter.ru/imglib/", "");
+            line = CCSVBuilder.BuildLine(Values, CSVFieldTypes.InternalImage);
             swr.WriteLine(line);
           }
         }

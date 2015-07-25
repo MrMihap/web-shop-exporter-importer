@@ -79,6 +79,7 @@ namespace HobbyCenterExporter
         cat25.parent_id = 0;
         cat25.name = "Запчасти";
         categories.Add(cat25);
+        // конец костыля
         while (reader.Read())
         {
           switch (reader.NodeType)

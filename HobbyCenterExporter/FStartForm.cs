@@ -88,8 +88,8 @@ namespace HobbyCenterExporter
         +" категорий" );
       MessageBox.Show("Укажите имя CSV файла для выгрузки в него товаров и категорий");
       SaveFileDialog Savedialog = new SaveFileDialog();
-      Savedialog.AddExtension = true;
-      Savedialog.DefaultExt = "csv";
+      //Savedialog.AddExtension = true;
+      //Savedialog.DefaultExt = "csv";
       Savedialog.Filter = "csv files (*.csv)|*.csv";
       switch (Savedialog.ShowDialog())
       {
@@ -168,7 +168,7 @@ namespace HobbyCenterExporter
           Values[15] = prop.Photo;
           //Quantity
           Values[16] = "100";
-          swr.WriteLine(CCSVBuilder.BuildLine(Values));
+          swr.WriteLine(CCSVBuilder.BuildLine(Values, CSVFieldTypes.InternalImage));
           lineCount++;
         }
         MessageBox.Show("Удачно выгружено " + lineCount.ToString() +" наименований");

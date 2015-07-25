@@ -6,9 +6,17 @@ using System.Threading.Tasks;
 using System.Web;
 namespace HobbyCenterExporter
 {
+  public enum CSVFieldTypes
+  {
+    Standart,
+    InternalImage,
+    Html,
+    Text,
+    ExternalImage
+  }
   class CCSVBuilder
   {
-    public static string BuildLine(string[] array)
+    public static string BuildLine(string[] array, CSVFieldTypes type = CSVFieldTypes.Standart)
     {
       string result = "";
       for (int i = 0; i < array.Length; i++)
@@ -30,7 +38,19 @@ namespace HobbyCenterExporter
         //cell = cell.Replace("& rdquo;", "\"");
         cell = cell.Replace(";", ":");
         //cell = cell.Replace("&","");
-        cell = cell.Replace("/imglib/", "http://www.hobbycenter.ru/imglib/");
+        if(type == CSVFieldTypes.InternalImage)
+        if (cell.Contains("ru/imglib/"))
+        {
+          cell = cell.Replace("http://hobbycenter.ru/imglib/", "");
+          // do nth
+        }
+        if (type == CSVFieldTypes.ExternalImage)
+        {
+        }
+        //else if (cell.Contains("/imglib/"))
+        //{
+        //  cell = cell.Replace("/imglib/", "http://www.hobbycenter.ru/imglib/");
+        //}
         //        cell = cell.Replace(";", "\";\"");
         if (i < array.Length - 1)
           cell += ";";
@@ -39,4 +59,5 @@ namespace HobbyCenterExporter
       return result;
     }
   }
+
 }
