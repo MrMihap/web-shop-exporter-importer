@@ -135,8 +135,8 @@ namespace HobbyCenterExporter
           Values[0] = item.article.ToString();
           Values[1] = "M";
           Values[2] = item.Photo.Replace("http://hobbycenter.ru/imglib/", "");
-          //line = CCSVBuilder.BuildLine(Values);
-          //swr.WriteLine(line);
+          line = CCSVBuilder.BuildLine(Values, CSVFieldTypes.InternalImage);
+          swr.WriteLine(line);
 
           foreach (string gallery in item.gallery)
           {
